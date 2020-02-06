@@ -49,10 +49,10 @@ try {
   rc = revokeToken.getResponseCode()
 } catch (Exception ex) {
    LOG.log(Level.WARNING, 'Error deleting token')
-   LOG.log(Level.INFO, generateToken.getErrorStream().getText())
+   LOG.log(Level.INFO, ex.getMessage())
 }
 if (rc == 200) {
-  LOG.log(Level.INFO, 'Delete existing token')
+  LOG.log(Level.INFO, 'Deleted existing token!')
 }
 
 // Create a new admin token named "Jenkins" and capture the value
@@ -69,12 +69,12 @@ def retryLimit = 5
 while (retryLimit > 0)
 {
   try {
-    revokeToken.getOutputStream().write(message.getBytes("UTF-8"))
-    rc = revokeToken.getResponseCode()
+    generateToken.getOutputStream().write(message.getBytes("UTF-8"))
+    rc = generateToken.getResponseCode()
   } catch (Exception ex) {
     rc = 0
     LOG.log(Level.WARNING, 'Error deleting token')
-    LOG.log(Level.INFO, revokeToken.getErrorStream().getText())
+    LOG.log(Level.INFO, ex.getMessage())
   }
   
   if (rc == 200) {
