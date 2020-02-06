@@ -64,6 +64,7 @@ while (retryLimit > 0)
   if (rc == 200) {
       retryLimit = 0
   } else {
+      LOG.log(Level.INFO, 'Error getting SonarQube auth token will retry, rc:' + rc)
       retryLimit--
       sleep(60)
   }
