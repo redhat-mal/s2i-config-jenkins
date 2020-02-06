@@ -6,6 +6,10 @@ import hudson.plugins.sonar.SonarRunnerInstallation
 import hudson.plugins.sonar.SonarRunnerInstaller
 import hudson.plugins.sonar.model.TriggersConfig
 import hudson.tools.InstallSourceProperty
+import com.cloudbees.plugins.credentials.*;
+import com.cloudbees.plugins.credentials.domains.Domain;
+import org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl;
+
 
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -61,12 +65,20 @@ if (rc == 200) {
     def data = jsonParser.parseText(jsonBody)
     token = data.token
 
+    LOG.log(Level.INFO, ' TOKEN' + token)
+
     // Add the SonarQube server config to Jenkins
     SonarInstallation sonarInst = new SonarInstallation(
         "sonar", sonarHost, token, "", "", new TriggersConfig(), "")
     sonarConfig.setInstallations(sonarInst)
     sonarConfig.setBuildWrapperEnabled(true)
     sonarConfig.save()
+
+
+    def secretBytes = SecretBytes.fromBytes(token.getBytes())
+    def credentials = new FileCredentialsImpl(CredentialsScope.GLOBAL, 'mikesonar', 'description', 'sonar', secretBytes)
+
+    SystemCredentialsProvider.instance.store.addCredentials(Domain.global(), credentials)
 
     // Sonar Runner
     // Source: http://pghalliday.com/jenkins/groovy/sonar/chef/configuration/management/2014/09/21/some-useful-jenkins-groovy-scripts.html
