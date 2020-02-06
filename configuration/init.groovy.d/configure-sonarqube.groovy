@@ -42,8 +42,18 @@ revokeToken.setDoOutput(true)
 revokeToken.setRequestProperty("Accept", "application/json")
 def authString = "admin:admin".bytes.encodeBase64().toString()
 revokeToken.setRequestProperty("Authorization", "Basic ${authString}")
-revokeToken.getOutputStream().write(message.getBytes("UTF-8"))
-def rc = revokeToken.getResponseCode()
+
+def rc = 0
+try {
+  revokeToken.getOutputStream().write(message.getBytes("UTF-8"))
+  rc = revokeToken.getResponseCode()
+} catch (Exception ex) {
+   LOG.log(Level.WARN, 'Error deleting token')
+   LOG.log(Level.INFO, generateToken.getErrorStream().getText())
+}
+if (rc == 200) {
+  LOG.log(Level.INFO, 'Delete existing token')
+}
 
 // Create a new admin token named "Jenkins" and capture the value
 LOG.log(Level.INFO, 'Generate new auth token for SonarQube/Jenkins integration')
@@ -58,9 +68,15 @@ def retryLimit = 5
 // Wait for Sonar to come alive
 while (retryLimit > 0)
 {
-  generateToken.getOutputStream().write(message.getBytes("UTF-8"))
-  rc = generateToken.getResponseCode()
-   
+  try {
+    revokeToken.getOutputStream().write(message.getBytes("UTF-8"))
+    rc = revokeToken.getResponseCode()
+  } catch (Exception ex) {
+    rc = 0
+    LOG.log(Level.WARN, 'Error deleting token')
+    LOG.log(Level.INFO, generateToken.getErrorStream().getText())
+  }
+  
   if (rc == 200) {
       retryLimit = 0
   } else {
