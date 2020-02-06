@@ -48,7 +48,7 @@ try {
   revokeToken.getOutputStream().write(message.getBytes("UTF-8"))
   rc = revokeToken.getResponseCode()
 } catch (Exception ex) {
-   LOG.log(Level.WARN, 'Error deleting token')
+   LOG.log(Level.WARNING, 'Error deleting token')
    LOG.log(Level.INFO, generateToken.getErrorStream().getText())
 }
 if (rc == 200) {
@@ -73,7 +73,7 @@ while (retryLimit > 0)
     rc = revokeToken.getResponseCode()
   } catch (Exception ex) {
     rc = 0
-    LOG.log(Level.WARN, 'Error deleting token')
+    LOG.log(Level.WARNING, 'Error deleting token')
     LOG.log(Level.INFO, generateToken.getErrorStream().getText())
   }
   
@@ -130,6 +130,6 @@ if (rc == 200) {
 
     LOG.log(Level.INFO, 'SonarQube configuration complete')
 } else {
-    LOG.log(Level.INFO, "Request failed: ${rc}")
+    LOG.log(Level.WARNING, "Request failed: ${rc}")
     LOG.log(Level.INFO, generateToken.getErrorStream().getText())
 }
