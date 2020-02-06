@@ -63,6 +63,12 @@ if (rc == 200) {
     def data = jsonParser.parseText(jsonBody)
     def token = hudson.util.Secret.fromString(data.token)
 
+    def secretBytes = SecretBytes.fromBytes(data.token.getBytes())
+    def credentials = new FileCredentialsImpl(CredentialsScope.GLOBAL, 'sonar', 'description', 'sonar', secretBytes)
+
+    SystemCredentialsProvider.instance.store.addCredentials(Domain.global(), credentials)
+
+
     LOG.log(Level.INFO, ' TOKEN BODY' + data.token)
 
     // Add the SonarQube server config to Jenkins
