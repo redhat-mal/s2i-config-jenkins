@@ -56,8 +56,6 @@ generateToken.setRequestProperty("Authorization", "Basic ${authString}")
 generateToken.getOutputStream().write(message.getBytes("UTF-8"))
 rc = generateToken.getResponseCode()
 
-def token = null
-
 if (rc == 200) {
     LOG.log(Level.INFO, 'Successfully generated SonarQube auth token')
     def jsonBody = generateToken.getInputStream().getText()
