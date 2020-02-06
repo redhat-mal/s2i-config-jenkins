@@ -8,7 +8,7 @@ import hudson.plugins.sonar.model.TriggersConfig
 import hudson.tools.InstallSourceProperty
 import com.cloudbees.plugins.credentials.*;
 import com.cloudbees.plugins.credentials.domains.Domain;
-import org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl;
+import org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl;
 
 
 import java.util.logging.Level
@@ -64,9 +64,14 @@ if (rc == 200) {
     def token = hudson.util.Secret.fromString(data.token)
 
     def secretBytes = SecretBytes.fromBytes(data.token.getBytes())
-    def credentials = new FileCredentialsImpl(CredentialsScope.GLOBAL, 'sonar', 'description', 'sonar', secretBytes)
 
-    SystemCredentialsProvider.instance.store.addCredentials(Domain.global(), credentials)
+    def secretText = new StringCredentialsImpl(
+                          CredentialsScope.GLOBAL,
+                          "sonar",
+                          "sonar Text Description",
+                           token)
+
+    SystemCredentialsProvider.instance.store.addCredentials(Domain.global(), secretText)
 
 
     LOG.log(Level.INFO, ' TOKEN BODY' + data.token)
