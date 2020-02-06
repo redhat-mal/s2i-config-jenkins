@@ -61,7 +61,7 @@ if (rc == 200) {
     def jsonBody = generateToken.getInputStream().getText()
     def jsonParser = new JsonSlurper()
     def data = jsonParser.parseText(jsonBody)
-    def token = hudson.util.Secret.fromString(StringUtils.trimToNull(data.token))
+    def token = hudson.util.Secret.fromString(data.token)
 
     LOG.log(Level.INFO, ' TOKEN BODY' + data.token)
 
