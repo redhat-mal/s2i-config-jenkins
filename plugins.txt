@@ -21,4 +21,5 @@ blueocean-rest:1.18.1
 blueocean-web:1.18.1
 blueocean:1.18.1
 sonar:2.11
+build-monitor-plugin:1.12+build.201809061734
 

@@ -73,9 +73,6 @@ if (rc == 200) {
 
     SystemCredentialsProvider.instance.store.addCredentials(Domain.global(), secretText)
 
-
-    LOG.log(Level.INFO, ' TOKEN BODY' + data.token)
-
     // Add the SonarQube server config to Jenkins
     SonarInstallation sonarInst = new SonarInstallation(
         "sonar", 
