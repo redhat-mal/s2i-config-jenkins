@@ -20,5 +20,5 @@ blueocean-rest-impl:1.18.1
 blueocean-rest:1.18.1
 blueocean-web:1.18.1
 blueocean:1.18.1
-sonar:2.10
+sonar:2.9
 
