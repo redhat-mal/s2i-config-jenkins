@@ -53,8 +53,22 @@ generateToken.setRequestMethod("POST")
 generateToken.setDoOutput(true)
 generateToken.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
 generateToken.setRequestProperty("Authorization", "Basic ${authString}")
-generateToken.getOutputStream().write(message.getBytes("UTF-8"))
-rc = generateToken.getResponseCode()
+def retryLimit = 5
+
+// Wait for Sonar to come alive
+while (retryLimit > 0)
+{
+  generateToken.getOutputStream().write(message.getBytes("UTF-8"))
+  rc = generateToken.getResponseCode()
+   
+  if (rc == 200) {
+      retryLimit = 0
+  } else {
+      retryLimit--
+      sleep(60)
+  }
+
+}
 
 if (rc == 200) {
     LOG.log(Level.INFO, 'Successfully generated SonarQube auth token')
