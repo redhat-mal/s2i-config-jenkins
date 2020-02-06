@@ -74,7 +74,7 @@ while (retryLimit > 0)
   } catch (Exception ex) {
     rc = 0
     LOG.log(Level.WARNING, 'Error deleting token')
-    LOG.log(Level.INFO, generateToken.getErrorStream().getText())
+    LOG.log(Level.INFO, revokeToken.getErrorStream().getText())
   }
   
   if (rc == 200) {
