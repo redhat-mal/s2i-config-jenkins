@@ -61,12 +61,12 @@ else {
 // Create a new admin token named "Jenkins" and capture the value
 LOG.log(Level.INFO, 'Generate new auth token for SonarQube/Jenkins integration')
 def retryLimit = 5
-
+def generateToken = null
 // Wait for Sonar to come alive
 while (retryLimit > 0)
 {
   try {
-    def generateToken = new URL("${sonarHost}/api/user_tokens/generate").openConnection()
+    generateToken = new URL("${sonarHost}/api/user_tokens/generate").openConnection()
     message = "name=${tokenName}&login=admin"
     generateToken.setRequestMethod("POST")
     generateToken.setDoOutput(true)
