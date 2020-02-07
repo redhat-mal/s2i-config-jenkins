@@ -53,7 +53,7 @@ try {
 }
 if (rc == 200) {
   LOG.log(Level.INFO, 'Deleted existing token!')
-else
+else {
   LOG.log(Level.WARNING, "Deleted existing token failed!: ${rc}")
 }
 
