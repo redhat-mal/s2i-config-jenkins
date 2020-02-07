@@ -60,33 +60,19 @@ else {
 
 // Create a new admin token named "Jenkins" and capture the value
 LOG.log(Level.INFO, 'Generate new auth token for SonarQube/Jenkins integration')
-def retryLimit = 5
+
 def generateToken = null
 // Wait for Sonar to come alive
-while (retryLimit > 0)
-{
-  try {
-    generateToken = new URL("${sonarHost}/api/user_tokens/generate").openConnection()
-    message = "name=${tokenName}&login=admin"
-    generateToken.setRequestMethod("POST")
-    generateToken.setDoOutput(true)
-    generateToken.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
-    generateToken.setRequestProperty("Authorization", "Basic ${authString}")
-    generateToken.getOutputStream().write(message.getBytes("UTF-8"))
-    rc = generateToken.getResponseCode()
-  } catch (Exception ex) {
-    rc = 0
-    LOG.log(Level.WARNING, 'Error generating new token')
-    LOG.log(Level.INFO, ex.getMessage())
-  }
-  
-  if (rc == 200) {
-      retryLimit = 0
-  } else {
-      LOG.log(Level.INFO, 'Error getting SonarQube auth token will retry, rc:' + rc)
-      retryLimit--
-      sleep(60)
-  }
+
+generateToken = new URL("${sonarHost}/api/user_tokens/generate").openConnection()
+message = "name=${tokenName}&login=admin"
+generateToken.setRequestMethod("POST")
+generateToken.setDoOutput(true)
+generateToken.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+generateToken.setRequestProperty("Authorization", "Basic ${authString}")
+generateToken.getOutputStream().write(message.getBytes("UTF-8"))
+rc = generateToken.getResponseCode()
+
 
 }
 
