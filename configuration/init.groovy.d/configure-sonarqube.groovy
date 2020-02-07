@@ -53,27 +53,29 @@ try {
 }
 if (rc == 200) {
   LOG.log(Level.INFO, 'Deleted existing token!')
+else
+  LOG.log(Level.WARNING, "Deleted existing token failed!: ${rc}")
 }
 
 // Create a new admin token named "Jenkins" and capture the value
 LOG.log(Level.INFO, 'Generate new auth token for SonarQube/Jenkins integration')
-def generateToken = new URL("${sonarHost}/api/user_tokens/generate").openConnection()
-message = "name=${tokenName}&login=admin"
-generateToken.setRequestMethod("POST")
-generateToken.setDoOutput(true)
-generateToken.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
-generateToken.setRequestProperty("Authorization", "Basic ${authString}")
 def retryLimit = 5
 
 // Wait for Sonar to come alive
 while (retryLimit > 0)
 {
   try {
+    def generateToken = new URL("${sonarHost}/api/user_tokens/generate").openConnection()
+    message = "name=${tokenName}&login=admin"
+    generateToken.setRequestMethod("POST")
+    generateToken.setDoOutput(true)
+    generateToken.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+    generateToken.setRequestProperty("Authorization", "Basic ${authString}")
     generateToken.getOutputStream().write(message.getBytes("UTF-8"))
     rc = generateToken.getResponseCode()
   } catch (Exception ex) {
     rc = 0
-    LOG.log(Level.WARNING, 'Error deleting token')
+    LOG.log(Level.WARNING, 'Error generating new token')
     LOG.log(Level.INFO, ex.getMessage())
   }
   
